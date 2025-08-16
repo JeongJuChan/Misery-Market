@@ -10,7 +10,7 @@ using Unity.Jobs;
 
 public class GoogleSheetLoaderEditor : EditorWindow
 {
-    private const string SPREADSHEET_ID = "1pOrbu69kDZHlofDGEViGJ-uICyEn1J92d5JBj-ZCnYM"; // Google Sheets 문서의 ID
+    private const string SPREADSHEET_ID = "17ua_9qSl1Pimh-XCrpxJCsC4iFTUxHBrO96OKWxHbI4"; // Google Sheets 문서의 ID
     private SheetsService service;
     private TableDataCollection tableDataCollection;
     private TableData selectedTableData;
@@ -120,7 +120,7 @@ public class GoogleSheetLoaderEditor : EditorWindow
 
         // 홈 디렉토리를 기반으로 credentials.json 경로 설정
         //string credentialsPath = Path.Combine(homeDirectory, "path/to/credentials.json");
-        string credentialsPath = Application.streamingAssetsPath + "/cookieruntcg-tutorial.json";
+        string credentialsPath = Application.streamingAssetsPath + "/miserymarket.json";
 
         if (string.IsNullOrEmpty(credentialsPath) || !File.Exists(credentialsPath))
         {
