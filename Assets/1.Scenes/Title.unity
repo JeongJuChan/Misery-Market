@@ -584,7 +584,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1818,6 +1818,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1132222585}
+  - component: {fileID: 1132222586}
   m_Layer: 0
   m_Name: Lights
   m_TagString: Untagged
@@ -1845,6 +1846,32 @@ Transform:
   - {fileID: 462700287}
   m_Father: {fileID: 1397439928}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1132222586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132222584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b6b803e262aaa1489d48101cf068d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lights: []
+  warmColor: {r: 1, g: 0.86, b: 0.62, a: 1}
+  colorJitter: 0.05
+  minIntensity: 0.6
+  maxIntensity: 1.2
+  noiseSpeedRange: {x: 1.2, y: 2.4}
+  desyncSeconds: 0.7
+  glitchChancePerSecond: 0.08
+  glitchDurationRange: {x: 0.05, y: 0.2}
+  addRipple: 0
+  rippleAmplitude: 0.15
+  rippleSpeed: 1.5
+  rippleSpacing: 0.6
+  minSoundInterval: 0.12
 --- !u!1 &1186422772
 GameObject:
   m_ObjectHideFlags: 0
@@ -2123,8 +2150,8 @@ Transform:
   m_GameObject: {fileID: 1397439926}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.49, y: 0.49, z: 0.49}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1132222585}
@@ -2797,7 +2824,7 @@ Transform:
   m_GameObject: {fileID: 1970651459}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
