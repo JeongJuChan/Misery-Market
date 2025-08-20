@@ -120,7 +120,26 @@ public class LocalizationManager : MonoBehaviour
             InitLocalization();
         }
 
-        return localizationTextDict[localizationKey][(int)CurrentLanguage];
+        if (string.IsNullOrEmpty(localizationKey))
+        {
+            Debug.LogWarning("[LocalizationManager] Empty localization key provided");
+            return "[MISSING_KEY]";
+        }
+
+        if (!localizationTextDict.TryGetValue(localizationKey, out string[] texts))
+        {
+            Debug.LogWarning($"[LocalizationManager] Missing localization key: {localizationKey}");
+            return $"[{localizationKey}]"; // 키를 그대로 표시
+        }
+
+        int languageIndex = (int)CurrentLanguage;
+        if (languageIndex < 0 || languageIndex >= texts.Length)
+        {
+            Debug.LogWarning($"[LocalizationManager] Invalid language index: {languageIndex} for key: {localizationKey}");
+            return texts[0]; // 첫 번째 언어로 폴백
+        }
+
+        return texts[languageIndex];
     }
 
     public string GetLocalizedText(string localizationKey, int targetCount)

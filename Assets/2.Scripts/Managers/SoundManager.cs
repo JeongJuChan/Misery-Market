@@ -51,8 +51,8 @@ public class SoundManager: MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        InitializeSound(5);
-        LoadSFXClipsFromResources();
+        // InitializeSound(5);
+        // LoadSFXClipsFromResources();
     }
 
 
@@ -241,7 +241,7 @@ public class SoundManager: MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{sfxName} 사운드를 찾을 수 없ㅇ");
+            Debug.LogWarning($"[SoundManager] {sfxName} 사운드를 찾을 수 없습니다.");
         }
     }
 

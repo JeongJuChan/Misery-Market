@@ -45,7 +45,7 @@ public class ResourceManager : MonoBehaviour
     private void InitResourceDict()
     {
         Language[] languages = LocalizationManager.Instance.Languages;
-        InitLocalizationSpriteDict(languages);
+        // InitLocalizationSpriteDict(languages);
     }
 
     private void InitLocalizationSpriteDict(Language[] languages)
@@ -84,13 +84,13 @@ public class ResourceManager : MonoBehaviour
     {
         if (soundGroupData == null || sfxMixerGroupDict.Count == 0)
         {
-            InitMixerGroupDIct();
+            InitMixerGroupDict();
         }
 
         return sfxMixerGroupDict[sfxName];
     }
 
-    private void InitMixerGroupDIct()
+    private void InitMixerGroupDict()
     {
         if (soundGroupData == null)
         {
