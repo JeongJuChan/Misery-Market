@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public class DataManager
 {
     public static DataManager Instance
     {

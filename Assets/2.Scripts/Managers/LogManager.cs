@@ -19,7 +19,6 @@ public class LogManager : MonoBehaviour
     
     [Header("Log Settings")]
     [SerializeField] private LogLevel minLogLevel = LogLevel.Debug;
-    [SerializeField] private bool enableFileLogging = false;
     [SerializeField] private int maxLogEntries = 1000;
     
     private Queue<string> logHistory = new Queue<string>();

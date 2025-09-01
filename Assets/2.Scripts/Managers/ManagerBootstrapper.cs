@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.CompilerServices;
 
 /// <summary>
 /// 매니저들의 초기화 순서를 관리하는 부트스트래퍼
@@ -15,13 +18,13 @@ public class ManagerBootstrapper : MonoBehaviour
     private readonly System.Type[] managerInitOrder = new System.Type[]
     {
         typeof(LogManager),          // 1. 로그 매니저 (모든 매니저 의존)
-        typeof(CoroutineManager),    // 2. 코루틴 매니저 (다른 매니저들이 사용)
-        typeof(ResourceManager),     // 3. 리소스 매니저 (데이터 로드)
-        typeof(LocalizationManager), // 4. 로컬라이제이션 매니저 (리소스 의존)
-        typeof(SoundManager),        // 5. 사운드 매니저 (리소스 의존)
-        typeof(DataManager),         // 6. 데이터 매니저 (로컬라이제이션 의존)
-        typeof(PerformanceMonitor), // 7. 성능 모니터 (게임 전반 모니터링)
-        typeof(SceneManager),       // 8. 씬 매니저 (씬 전환 관리)
+        typeof(ResourceManager),     // 2. 리소스 매니저 (데이터 로드)
+        typeof(LocalizationManager), // 3. 로컬라이제이션 매니저 (리소스 의존)
+        typeof(SoundManager),        // 4. 사운드 매니저 (리소스 의존)
+        typeof(DataManager),         // 5. 데이터 매니저 (로컬라이제이션 의존)
+        typeof(PerformanceMonitor), // 6. 성능 모니터 (게임 전반 모니터링)
+        typeof(SceneManager),       // 7. 씬 매니저 (씬 전환 관리)
+        typeof(UIManager),          // 8. UI 매니저 (UI 전반 관리)
     };
 
     public static ManagerBootstrapper Instance { get; private set; }
@@ -32,7 +35,7 @@ public class ManagerBootstrapper : MonoBehaviour
     
     public System.Action OnAllManagersInitialized;
 
-    private void Awake()
+    private async void Awake()
     {
         if (Instance != null)
         {
@@ -45,11 +48,11 @@ public class ManagerBootstrapper : MonoBehaviour
         
         if (autoInitialize)
         {
-            StartCoroutine(InitializeManagersCoroutine());
+            await InitializeManagersCoroutine();
         }
     }
 
-    public System.Collections.IEnumerator InitializeManagersCoroutine()
+    public async UniTask InitializeManagersCoroutine()
     {
         Debug.Log("[ManagerBootstrapper] Starting manager initialization...");
         
@@ -57,7 +60,7 @@ public class ManagerBootstrapper : MonoBehaviour
         
         foreach (var managerType in managerInitOrder)
         {
-            yield return StartCoroutine(InitializeManager(managerType));
+            await InitializeManager(managerType);
             
             // 타임아웃 체크
             if (Time.time - startTime > initializationTimeout)
@@ -73,10 +76,10 @@ public class ManagerBootstrapper : MonoBehaviour
         Debug.Log($"[ManagerBootstrapper] All managers initialized in {Time.time - startTime:F2} seconds");
     }
 
-    private System.Collections.IEnumerator InitializeManager(System.Type managerType)
+    private async UniTask InitializeManager(System.Type managerType)
     {
         Debug.Log($"[ManagerBootstrapper] Initializing {managerType.Name}...");
-        
+
         try
         {
             // 싱글톤 Instance 프로퍼티 호출로 생성 및 초기화
@@ -95,8 +98,8 @@ public class ManagerBootstrapper : MonoBehaviour
         {
             Debug.LogError($"[ManagerBootstrapper] Failed to initialize {managerType.Name}: {ex.Message}");
         }
-        
-        yield return null; // 한 프레임 대기
+
+        await UniTask.Yield();
     }
 
     public bool IsManagerInitialized<T>() where T : MonoBehaviour

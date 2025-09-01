@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Audio;
+using Cysharp.Threading.Tasks;
 
 public class SoundManager: MonoBehaviour
 {
@@ -36,8 +37,9 @@ public class SoundManager: MonoBehaviour
     private float duplicateFilterTime = 0.05f; // 같은 클립은 0.05초 내 중복 재생 제한
 
     private GameObject obj = null;
-    private Coroutine changeCor = null;
-    private float lerpTime = 1f;
+    // UniTask crossfade control
+    private CancellationTokenSource bgmFadeCts;
+    private float lerpTime = 1f; // crossfade duration
     private int queueCount;
 
     private void Awake()
@@ -80,7 +82,7 @@ public class SoundManager: MonoBehaviour
             groupVolumes.Add(value);
         }
 
-        CoroutineManager.Instance.StartCoroutine(DelayedSettingVolumes());
+    DelayedSettingVolumesAsync().Forget();
     }
 
     private void LoadSFXClipsFromResources()
@@ -125,9 +127,9 @@ public class SoundManager: MonoBehaviour
         }
     }
 
-    private IEnumerator DelayedSettingVolumes()
+    private async UniTaskVoid DelayedSettingVolumesAsync()
     {
-        yield return null;
+        await UniTask.Yield();
         SettingVolumes();
     }
 
@@ -169,65 +171,84 @@ public class SoundManager: MonoBehaviour
 
     public void PlayBGM(AudioClip bgmClip)
     {
-        if (null != changeCor)
-        {
-            CoroutineManager.Instance.StopCoroutine(changeCor);
-            changeCor = null;
-        }
+        if (bgmClip == null) return;
+        PlayBGMAsync(bgmClip).Forget();
+    }
 
+    private async UniTask PlayBGMAsync(AudioClip bgmClip)
+    {
+        bgmFadeCts?.Cancel();
+        bgmFadeCts?.Dispose();
+        bgmFadeCts = new CancellationTokenSource();
+        var ct = bgmFadeCts.Token;
+
+        AudioSource target;
+        AudioSource turnOff;
         if (!bgmSources[0].isPlaying)
         {
-            bgmSources[0].clip = bgmClip;
-            changeCor = CoroutineManager.Instance.StartCoroutine(ChangeBGMClip(bgmSources[0], bgmSources[1]));
+            target = bgmSources[0];
+            turnOff = bgmSources[1];
         }
         else
         {
-            bgmSources[1].clip = bgmClip;
-            changeCor = CoroutineManager.Instance.StartCoroutine(ChangeBGMClip(bgmSources[1], bgmSources[0]));
+            target = bgmSources[1];
+            turnOff = bgmSources[0];
         }
+
+        target.clip = bgmClip;
+        await CrossfadeAsync(target, turnOff, lerpTime, ct);
     }
 
     public void PlayBGMOnce(AudioClip bgmClip)
     {
         if (bgmClip == null) return;
-
         foreach (var source in bgmSources)
         {
             if (source.isPlaying && source.clip == bgmClip)
                 return; // 이미 재생 중이면 무시
         }
-
         PlayBGM(bgmClip);
     }
 
 
-    IEnumerator ChangeBGMClip(AudioSource target, AudioSource turnOff)
+    private async UniTask CrossfadeAsync(AudioSource target, AudioSource turnOff, float duration, CancellationToken ct)
     {
-        float current = 0f;
+        float time = 0f;
+        target.volume = 0f;
+        if (!target.isPlaying)
+            target.Play();
 
-        target.Play();
+        float startTurnOffVol = turnOff.isPlaying ? turnOff.volume : 0f;
 
-        while (current < lerpTime)
+        while (time < duration)
         {
-            current += Time.deltaTime;
-
-            target.volume = Mathf.Lerp(0, 1, (current / lerpTime));
-            turnOff.volume = Mathf.Lerp(1, 0, (current / lerpTime));
-
-            yield return null;
+            if (ct.IsCancellationRequested) return;
+            time += Time.unscaledDeltaTime;
+            float t = duration <= 0f ? 1f : Mathf.Clamp01(time / duration);
+            target.volume = Mathf.Lerp(0f, 1f, t);
+            if (turnOff.isPlaying)
+                turnOff.volume = Mathf.Lerp(startTurnOffVol, 0f, t);
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
 
         target.volume = 1f;
-        turnOff.Stop();
-        turnOff.clip = null;
-
-        changeCor = null;
+        if (turnOff.isPlaying)
+        {
+            turnOff.Stop();
+            turnOff.clip = null;
+            turnOff.volume = 1f;
+        }
     }
 
     public void StopBGM()
     {
+        bgmFadeCts?.Cancel();
         foreach (var source in bgmSources)
+        {
             source.Stop();
+            source.clip = null;
+            source.volume = 1f;
+        }
     }
 
     public void PlaySFX(SFXName sfxName)
@@ -343,5 +364,12 @@ public class SoundManager: MonoBehaviour
 
         clipLastPlayedTime[id] = now;
         return true;
+    }
+
+    private void OnDestroy()
+    {
+        bgmFadeCts?.Cancel();
+        bgmFadeCts?.Dispose();
+        bgmFadeCts = null;
     }
 }

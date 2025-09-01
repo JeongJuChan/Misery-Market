@@ -214,6 +214,8 @@ GameObject:
   - component: {fileID: 42351255}
   - component: {fileID: 42351256}
   - component: {fileID: 42351257}
+  - component: {fileID: 42351258}
+  - component: {fileID: 42351259}
   m_Layer: 0
   m_Name: Bag
   m_TagString: Untagged
@@ -337,6 +339,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 12.491997, y: 13.128872}
   m_EdgeRadius: 0
+--- !u!114 &42351258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42351254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fbf61355cec7884dba40fb545900a74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &42351259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42351254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeb4bd3c4ce0173409ac77b345546937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 42351256}
+  inActiveSprite: {fileID: 21300000, guid: 646855b57e9c1364486b252681fe8193, type: 3}
+  activeSprite: {fileID: 21300000, guid: b119cf557b2f2884aa3e5dc115655a51, type: 3}
+  fadeOutDuration: 0.15
+  fadeInDuration: 0.15
+  fadeEase: 9
+  startAsInactive: 1
 --- !u!1 &352610031
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,6 +597,8 @@ GameObject:
   - component: {fileID: 984242246}
   - component: {fileID: 984242247}
   - component: {fileID: 984242248}
+  - component: {fileID: 984242249}
+  - component: {fileID: 984242250}
   m_Layer: 0
   m_Name: Book
   m_TagString: Untagged
@@ -687,6 +722,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 14.615089, y: 4.275627}
   m_EdgeRadius: 0
+--- !u!114 &984242249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984242245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3aff7622b03ee479cd41b3f6b9fe4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &984242250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984242245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeb4bd3c4ce0173409ac77b345546937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 984242247}
+  inActiveSprite: {fileID: 21300000, guid: a31f8f78a667b6246a1b0a743a32b3b6, type: 3}
+  activeSprite: {fileID: 21300000, guid: f3f86f6d206177f468fdc6195384cb18, type: 3}
+  fadeOutDuration: 0.15
+  fadeInDuration: 0.15
+  fadeEase: 9
+  startAsInactive: 1
 --- !u!1 &1859810691
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,6 +764,8 @@ GameObject:
   - component: {fileID: 1859810692}
   - component: {fileID: 1859810693}
   - component: {fileID: 1859810694}
+  - component: {fileID: 1859810695}
+  - component: {fileID: 1859810696}
   m_Layer: 0
   m_Name: Television
   m_TagString: Untagged
@@ -821,6 +889,37 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 10.56974, y: 7.7916927}
   m_EdgeRadius: 0
+--- !u!114 &1859810695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859810691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab033cfdc8546a4587e0b9aa222397d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1859810696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859810691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeb4bd3c4ce0173409ac77b345546937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1859810693}
+  inActiveSprite: {fileID: 21300000, guid: 485217f1d49cada41bd99873a08970a7, type: 3}
+  activeSprite: {fileID: 21300000, guid: c08a303d0774e574ab69b5ca47d7ba59, type: 3}
+  fadeOutDuration: 0.15
+  fadeInDuration: 0.15
+  fadeEase: 9
+  startAsInactive: 1
 --- !u!1 &1905270528
 GameObject:
   m_ObjectHideFlags: 0

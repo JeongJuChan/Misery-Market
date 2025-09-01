@@ -35,13 +35,21 @@ public enum UIState
     Hiding,
 }
 
-public enum PanelId
+public enum UIId
 {
     None,
-    MainMenu,
+    Title,
     Settings,
-    Inventory,
-    Shop,
-    Dialog,
-    Loading,
+}
+
+public enum CharacterType
+{
+    System,
+    You,
+    Bernard,
+    Steve,
+    Luca,
+    Darren,
+    Malik,
+    DanBear
 }
