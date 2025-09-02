@@ -53,3 +53,8 @@ public enum CharacterType
     Malik,
     DanBear
 }
+
+public enum MarketPlace
+{
+    Subway,
+}

@@ -13,9 +13,13 @@ public class LocalizationManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("@LocalizationManager");
-                LocalizationManager localizationManager = go.AddComponent<LocalizationManager>();
-                instance = localizationManager;
+                instance = FindAnyObjectByType<LocalizationManager>();
+                if (instance == null)
+                {
+                    GameObject go = new GameObject("@LocalizationManager");
+                    LocalizationManager localizationManager = go.AddComponent<LocalizationManager>();
+                    instance = localizationManager;
+                }
             }
 
             return instance;
@@ -72,7 +76,7 @@ public class LocalizationManager : MonoBehaviour
     {
         if (localizationTextData == null)
         {
-            localizationTextData = Resources.Load<GameData>("ScriptableObjects/GameData/LocalizationText");
+            localizationTextData = Resources.Load<GameData>("ScriptableObjects/GameData/UILocalization");
         }
 
         var rows = localizationTextData.GetDataRows();

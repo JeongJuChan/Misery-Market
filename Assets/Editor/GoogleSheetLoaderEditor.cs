@@ -259,7 +259,9 @@ public class GoogleSheetLoaderEditor : EditorWindow
 
     private void SaveOrUpdateGameData(TableData tableData)
     {
-        string folderPath = tableData.isResourceFolderUsed ? "Assets/Resources/ScriptableObjects/GameData" : "Assets/3.Prefabs/ScriptableObjects/GameData";
+        string folderPath = tableData.isResourceFolderUsed ?
+            $"Assets/Resources/ScriptableObjects/GameData/{tableData.additionalPath}" :
+            $"Assets/3.Prefabs/ScriptableObjects/GameData/{tableData.additionalPath}";
         string assetPath = $"{folderPath}/{tableData.gameDataName}.asset";
 
         GameData gameData = AssetDatabase.LoadAssetAtPath<GameData>(assetPath);

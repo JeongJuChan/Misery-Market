@@ -19,11 +19,13 @@ public class ResourceManager : MonoBehaviour
     }
     private static ResourceManager instance;
 
+    [Header("Game Datas")]
     [SerializeField] private GameData localizationSpriteData;
-    [SerializeField] private GameData cardScriptableObjectData;
+    [SerializeField] private GameData[] spriteDatas;
     [SerializeField] private GameData soundGroupData;
 
     private Dictionary<string, Sprite[]> localizationSpriteDict = new Dictionary<string, Sprite[]>();
+    private Dictionary<string, Sprite> spriteDict = new Dictionary<string, Sprite>();
     private Dictionary<SFXName, MixerGroup> sfxMixerGroupDict = new Dictionary<SFXName, MixerGroup>();
 
     private void Awake()
@@ -45,7 +47,39 @@ public class ResourceManager : MonoBehaviour
     private void InitResourceDict()
     {
         Language[] languages = LocalizationManager.Instance.Languages;
-        // InitLocalizationSpriteDict(languages);
+        InitSpriteDict();
+    }
+
+    public Sprite GetSprite(string key)
+    {
+        if (spriteDict.TryGetValue(key, out Sprite sprite))
+        {
+            return sprite;
+        }
+
+        Debug.LogWarning($"Sprite not found: {key}");
+        return null;
+    }
+
+    private void InitSpriteDict()
+    {
+        if (spriteDatas == null || spriteDatas.Length == 0)
+        {
+            spriteDatas = Resources.LoadAll<GameData>("ScriptableObjects/GameData/Images/Market");
+        }
+
+        foreach (var spriteData in spriteDatas)
+        {
+            var rows = spriteData.GetDataRows();
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                List<string> datas = rows[i].rowData;
+                string spriteKey = datas[0];
+                Sprite sprite = Resources.Load<Sprite>(datas[2]);
+                spriteDict[spriteKey] = sprite;
+            }
+        }
     }
 
     private void InitLocalizationSpriteDict(Language[] languages)
@@ -77,7 +111,7 @@ public class ResourceManager : MonoBehaviour
 
     public Sprite GetLocalizedSprite(string localizationKey)
     {
-        return localizationSpriteDict[localizationKey][(int) LocalizationManager.Instance.CurrentLanguage];
+        return localizationSpriteDict[localizationKey][(int)LocalizationManager.Instance.CurrentLanguage];
     }
 
     public MixerGroup GetMixerGroupBySFXName(SFXName sfxName)
