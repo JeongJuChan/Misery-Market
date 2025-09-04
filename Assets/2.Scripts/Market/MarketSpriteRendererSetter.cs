@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MarketSpriteRendererSetter : MonoBehaviour
 {
@@ -9,12 +9,35 @@ public class MarketSpriteRendererSetter : MonoBehaviour
 
     [SerializeField] private MarketPlace marketPlace;
 
-    void Awake()
+    private int[] characterKeys;
+
+    private async UniTaskVoid Start()
     {
-        // 임시
-        if (marketPlace == MarketPlace.Subway)
+        await UniTask.WaitUntil(() => ManagerBootstrapper.Instance != null && ManagerBootstrapper.Instance.IsInitializationComplete());
+
+        MarketSpriteData marketSpriteData = DataManager.Instance.GetMarketSpriteData(marketPlace);
+        characterKeys = marketSpriteData.CharacterKeys;
+        backgroundRenderer.sprite = ResourceManager.Instance.GetSprite($"{Consts.MARKET_MAPPING_KEY}{marketSpriteData.BackgroundKey}");
+        UpdateCustomerSprite(0);
+    }
+
+    public void UpdateCustomerSprite(int characterIndex)
+    {
+        if (characterIndex < 0 || characterIndex >= characterKeys.Length)
         {
-            backgroundRenderer.sprite = ResourceManager.Instance.GetSprite($"{Consts.MARKET_MAPPING_KEY}");
+            Debug.LogWarning($"Character index {characterIndex} is out of bounds for market place {marketPlace}");
+            return;
+        }
+
+        int characterKey = characterKeys[characterIndex];
+        Sprite newSprite = ResourceManager.Instance.GetSprite($"{Consts.CHARACTER_MAPPING_KEY}{characterKey}");
+        if (newSprite != null)
+        {
+            customerRenderer.sprite = newSprite;
+        }
+        else
+        {
+            Debug.LogWarning($"Sprite not found for character key: {characterKey}");
         }
     }
 }

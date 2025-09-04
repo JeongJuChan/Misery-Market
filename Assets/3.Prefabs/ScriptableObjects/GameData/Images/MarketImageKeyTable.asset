@@ -16,4 +16,4 @@ MonoBehaviour:
   additionalPath: Market
   tableName: "\uB9F5 \uB370\uC774\uD130"
   range: A:C
-  gameDataName: MapImageData
+  gameDataName: MarketImageKeyData

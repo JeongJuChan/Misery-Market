@@ -2,21 +2,21 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class SceneManager
+public class SceneManagerEx
 {
-    public static SceneManager Instance
+    public static SceneManagerEx Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = new SceneManager();
+                instance = new SceneManagerEx();
             }
 
             return instance;
         }
     }
-    private static SceneManager instance;
+    private static SceneManagerEx instance;
 
     public bool IsBusy { get; private set; }
 

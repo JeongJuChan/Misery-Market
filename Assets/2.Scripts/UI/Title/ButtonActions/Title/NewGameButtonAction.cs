@@ -8,6 +8,6 @@ public class NewGameButtonAction : MonoBehaviour, IButtonActionAsync
 {
     public async UniTask OnButtonClickedAsync(CancellationToken cancellationToken)
     {
-        await SceneManager.Instance.LoadScene(SceneType.BaseCamp);
+        await SceneManagerEx.Instance.LoadScene(SceneType.BaseCamp);
     }
 }

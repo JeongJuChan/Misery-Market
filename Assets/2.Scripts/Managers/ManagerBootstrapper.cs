@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using System;
 
 /// <summary>
 /// 매니저들의 초기화 순서를 관리하는 부트스트래퍼
@@ -12,15 +13,15 @@ public class ManagerBootstrapper : MonoBehaviour
     [SerializeField] private float initializationTimeout = 10f;
     
     // 초기화 순서 정의
-    private readonly System.Type[] managerInitOrder = new System.Type[]
+    private readonly Type[] managerInitOrder = new Type[]
     {
-        typeof(LogManager),          // 1. 로그 매니저 (모든 매니저 의존)
-        typeof(ResourceManager),     // 2. 리소스 매니저 (데이터 로드)
-        typeof(LocalizationManager), // 3. 로컬라이제이션 매니저 (리소스 의존)
-        typeof(SoundManager),        // 4. 사운드 매니저 (리소스 의존)
+        // typeof(LogManager),          // 1. 로그 매니저 (모든 매니저 의존)
+        // typeof(ResourceManager),     // 2. 리소스 매니저 (데이터 로드)
+        // typeof(LocalizationManager), // 3. 로컬라이제이션 매니저 (리소스 의존)
+        // typeof(SoundManager),        // 4. 사운드 매니저 (리소스 의존)
         typeof(DataManager),         // 5. 데이터 매니저 (로컬라이제이션 의존)
         typeof(PerformanceMonitor), // 6. 성능 모니터 (게임 전반 모니터링)
-        typeof(SceneManager),       // 7. 씬 매니저 (씬 전환 관리)
+        typeof(SceneManagerEx),       // 7. 씬 매니저 (씬 전환 관리)
         typeof(UIManager),          // 8. UI 매니저 (UI 전반 관리)
     };
 
@@ -30,7 +31,7 @@ public class ManagerBootstrapper : MonoBehaviour
     [SerializeField] private List<string> initializedManagers = new List<string>();
     [SerializeField] private bool isInitializationComplete = false;
     
-    public System.Action OnAllManagersInitialized;
+    public Action OnAllManagersInitialized;
 
     private async void Awake()
     {
@@ -66,14 +67,14 @@ public class ManagerBootstrapper : MonoBehaviour
                 break;
             }
         }
-        
+
         isInitializationComplete = true;
         OnAllManagersInitialized?.Invoke();
         
         Debug.Log($"[ManagerBootstrapper] All managers initialized in {Time.time - startTime:F2} seconds");
     }
 
-    private async UniTask InitializeManager(System.Type managerType)
+    private async UniTask InitializeManager(Type managerType)
     {
         Debug.Log($"[ManagerBootstrapper] Initializing {managerType.Name}...");
 
@@ -87,16 +88,20 @@ public class ManagerBootstrapper : MonoBehaviour
                 if (instance != null)
                 {
                     initializedManagers.Add(managerType.Name);
+
+                    if (instance is IInitializable initializable)
+                    {
+                        await initializable.InitializeAsync();
+                    }
+
                     Debug.Log($"[ManagerBootstrapper] {managerType.Name} initialized successfully");
                 }
             }
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             Debug.LogError($"[ManagerBootstrapper] Failed to initialize {managerType.Name}: {ex.Message}");
         }
-
-        await UniTask.Yield();
     }
 
     public bool IsManagerInitialized<T>() where T : MonoBehaviour

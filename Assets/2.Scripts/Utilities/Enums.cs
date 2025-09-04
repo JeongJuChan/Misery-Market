@@ -25,7 +25,7 @@ public enum SceneType
 {
     Title,
     BaseCamp,
-    Subway,
+    MarketMap,
 }
 
 public enum UIState
@@ -56,5 +56,5 @@ public enum CharacterType
 
 public enum MarketPlace
 {
-    Subway,
+    Train,
 }
