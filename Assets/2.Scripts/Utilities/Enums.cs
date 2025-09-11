@@ -40,6 +40,9 @@ public enum UIId
     None,
     Title,
     Settings,
+    TodayWeatherPanel,
+    RoadMapPanel,
+    BagUIPanel,
 }
 
 public enum CharacterType

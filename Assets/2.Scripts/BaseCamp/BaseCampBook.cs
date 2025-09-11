@@ -6,5 +6,6 @@ public class BaseCampBook : BaseCampTriggerBase
     {
         // 책 로직
         base.Toggle();
+        // UIManager.Instance.Show(UIId.)
     }
 }

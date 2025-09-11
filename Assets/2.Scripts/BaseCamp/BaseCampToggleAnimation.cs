@@ -1,5 +1,6 @@
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// SpriteRenderer 위에 마우스 호버 시 Active 스프라이트로 전환 / 해제 시 Inactive 스프라이트로 전환.
@@ -51,11 +52,21 @@ public class BaseCampToggleAnimation : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // UI 클릭 중이므로 3D 오브젝트 클릭 로직 스킵
+        }
+
         SetHover(true);
     }
 
     private void OnMouseExit()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // UI 클릭 중이므로 3D 오브젝트 클릭 로직 스킵
+        }
+
         SetHover(false);
     }
 

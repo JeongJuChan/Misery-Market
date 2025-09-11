@@ -6,5 +6,6 @@ public class BaseCampTV : BaseCampTriggerBase
     {
         // TV 로직
         base.Toggle();
+        UIManager.Instance.Show(UIId.TodayWeatherPanel);
     }
 }

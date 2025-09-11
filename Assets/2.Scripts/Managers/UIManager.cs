@@ -33,6 +33,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private bool singleModal = true;
     [SerializeField] private UIId[] modalWhitelist; // 여기에 해당하는 것만 모달로 취급
 
+    private Dictionary<UIId, Action> OnHideActionDict = new Dictionary<UIId, Action>();
+
     void Awake()
     {
         if (instance == null)

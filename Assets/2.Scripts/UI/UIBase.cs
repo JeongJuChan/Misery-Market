@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 
-public class UIBase : MonoBehaviour
+public abstract class UIBase : MonoBehaviour
 {
     [field: SerializeField] public UIId Id { get; private set; }
     [SerializeField] private UIAnimPreset preset;
@@ -31,7 +31,7 @@ public class UIBase : MonoBehaviour
         cg ??= GetComponent<CanvasGroup>();
     }
 
-    public async UniTask ShowAsync(CancellationToken externalCt = default) {
+    public virtual async UniTask ShowAsync(CancellationToken externalCt = default) {
         if (State == UIState.Showing) return;
         
         CancelCurrentTween();
@@ -62,7 +62,7 @@ public class UIBase : MonoBehaviour
         }
     }
 
-    public async UniTask HideAsync(CancellationToken externalCt = default) {
+    public virtual async UniTask HideAsync(CancellationToken externalCt = default) {
         if (State == UIState.Hiding || !gameObject.activeSelf) return;
         
         CancelCurrentTween();
@@ -81,18 +81,21 @@ public class UIBase : MonoBehaviour
             // 순차적으로 애니메이션 실행
             await PlayHideAnimation(ct);
 
-            gameObject.SetActive(false);
         } catch (System.OperationCanceledException) {
             // 캔슬된 경우 처리
             Debug.Log($"[UIBase] Hide animation cancelled for {gameObject.name}");
         } finally {
+            gameObject.SetActive(false);
             State = UIState.Idle;
             ClearTweenReferences();
         }
     }
 
     private void SetupInitialState() {
-        if (preset.useSlide) {
+        if (preset == null) return;
+        
+        if (preset.useSlide)
+        {
             rt.anchoredPosition = preset.slideFrom;
         }
         if (preset.useScale) {
