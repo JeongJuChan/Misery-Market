@@ -61,3 +61,10 @@ public enum MarketPlace
 {
     Train,
 }
+
+public enum GreedyGameState
+{
+    Ready,
+    Playing,
+    End,
+}
