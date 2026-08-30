@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe3cebe48b99f164382d4f439f265ba7, type: 3}
   m_Name: UILocalizationData
   m_EditorClassIdentifier: 
-  isResourceFolderUsed: 0
+  isResourceFolderUsed: 1
   tableName: "UI \uD14D\uC2A4\uD2B8 \uBC88\uC5ED"
   gameDataName: UILocalization
   range: A:D

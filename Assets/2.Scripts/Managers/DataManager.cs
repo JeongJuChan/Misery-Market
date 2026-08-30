@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public class DataManager : IInitializable
 {
     public static DataManager Instance
     {
@@ -9,60 +11,47 @@ public class DataManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("@DataManager");
-                DataManager dataManager = go.AddComponent<DataManager>();
-                instance = dataManager;
+                instance = new DataManager();
             }
             return instance;
         }
     }
     private static DataManager instance;
 
-    private bool isMobile; // 모바일인지 여부
-    public string userDocId; // 유저 id
-    public string language; // 언어 설정
+    private GameData marketData;
+    private Dictionary<MarketPlace, MarketSpriteData> marketSpriteDict = new Dictionary<MarketPlace, MarketSpriteData>();
 
-    [System.Serializable]
-    public class DataObject
+    public async UniTask InitializeAsync()
     {
-        public bool isMobile;
-        public string userDocId;
-        public string language;
-    }
+        var request = Resources.LoadAsync("ScriptableObjects/GameData/MarketData/MarketImageKeyData");
+        await request;
+        marketData = request.asset as GameData;
 
-    private void Awake()
-    {
-        if (instance == null)
+        var rows = marketData.GetDataRows();
+
+        for (int i = 0; i < rows.Count; i++)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
+            List<string> datas = rows[i].rowData;
+
+            MarketPlace marketPlaceKey = (MarketPlace)Enum.Parse(typeof(MarketPlace), datas[0]);
+            int backgroundKey = int.Parse(datas[1]);
+            string[] iconKeys = datas[2].Split();
+            int[] iconKeyArr = new int[iconKeys.Length];
+
+            for (int j = 0; j < iconKeys.Length; j++)
+            {
+                iconKeyArr[j] = int.Parse(iconKeys[j]);
+            }
+
+            if (!marketSpriteDict.ContainsKey(marketPlaceKey))
+            {
+                marketSpriteDict.Add(marketPlaceKey, new MarketSpriteData(backgroundKey, iconKeyArr));
+            }
         }
     }
 
-    public void receive_data_from_web(string jsonData)
+    public MarketSpriteData GetMarketSpriteData(MarketPlace marketPlace)
     {
-        DataObject receivedData = JsonUtility.FromJson<DataObject>(jsonData);
-        //Debug.Log("isMobile: " + receivedData.isMobile);
-        //Debug.Log("userDocId: " + receivedData.userDocId);
-        //Debug.Log("language: " + receivedData.language);
-
-
-        // 받은 데이터를 클래스 내부 변수에 저장
-        isMobile = receivedData.isMobile;
-        userDocId = receivedData.userDocId;
-        language = receivedData.language;
-
-        LocalizationManager.Instance.UpdateLanguage((Language)Enum.Parse(typeof(Language), language));
-
-    }
-
-
-    public string GetUserId()
-    {
-        return userDocId == null || userDocId == "" ? "nobody" : userDocId;
+        return marketSpriteDict[marketPlace];
     }
 }

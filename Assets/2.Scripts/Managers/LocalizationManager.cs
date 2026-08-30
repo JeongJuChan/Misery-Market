@@ -13,9 +13,13 @@ public class LocalizationManager : MonoBehaviour
         {
             if (instance == null)
             {
-                GameObject go = new GameObject("@LocalizationManager");
-                LocalizationManager localizationManager = go.AddComponent<LocalizationManager>();
-                instance = localizationManager;
+                instance = FindAnyObjectByType<LocalizationManager>();
+                if (instance == null)
+                {
+                    GameObject go = new GameObject("@LocalizationManager");
+                    LocalizationManager localizationManager = go.AddComponent<LocalizationManager>();
+                    instance = localizationManager;
+                }
             }
 
             return instance;
@@ -72,7 +76,7 @@ public class LocalizationManager : MonoBehaviour
     {
         if (localizationTextData == null)
         {
-            localizationTextData = Resources.Load<GameData>("ScriptableObjects/GameData/LocalizationText");
+            localizationTextData = Resources.Load<GameData>("ScriptableObjects/GameData/UILocalization");
         }
 
         var rows = localizationTextData.GetDataRows();
@@ -120,7 +124,26 @@ public class LocalizationManager : MonoBehaviour
             InitLocalization();
         }
 
-        return localizationTextDict[localizationKey][(int)CurrentLanguage];
+        if (string.IsNullOrEmpty(localizationKey))
+        {
+            Debug.LogWarning("[LocalizationManager] Empty localization key provided");
+            return "[MISSING_KEY]";
+        }
+
+        if (!localizationTextDict.TryGetValue(localizationKey, out string[] texts))
+        {
+            Debug.LogWarning($"[LocalizationManager] Missing localization key: {localizationKey}");
+            return $"[{localizationKey}]"; // 키를 그대로 표시
+        }
+
+        int languageIndex = (int)CurrentLanguage;
+        if (languageIndex < 0 || languageIndex >= texts.Length)
+        {
+            Debug.LogWarning($"[LocalizationManager] Invalid language index: {languageIndex} for key: {localizationKey}");
+            return texts[0]; // 첫 번째 언어로 폴백
+        }
+
+        return texts[languageIndex];
     }
 
     public string GetLocalizedText(string localizationKey, int targetCount)

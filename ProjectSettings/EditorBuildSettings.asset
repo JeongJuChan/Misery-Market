@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Title.unity
+    path: Assets/1.Scenes/Title.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/1.Scenes/BaseCamp.unity
+    guid: c92dc380fbc7a6e4a8cf3971da180dd8
+  - enabled: 1
+    path: Assets/1.Scenes/MarketMap.unity
+    guid: e42280a3422acb74aaf4a2a66bc909c0
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
